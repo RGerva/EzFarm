@@ -1,0 +1,55 @@
+/**
+ * Generic Class: ModEquipmentAsset <T>
+ * A generic structure that works with type parameters.
+ *
+ * <p>Created by: superuser
+ * <p>On: 2026/jun.
+ *
+ * <p>GitHub: https://github.com/RGerva
+ *
+ * <p>Copyright (c) 2026 @RGerva. All Rights Reserved.
+ *
+ * <p>Licensed under the GNU General Public License, Version 3.0.
+ */
+
+package com.rgerva.ezfarm.datagen;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+
+import net.minecraft.client.resources.model.EquipmentClientInfo;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+
+public class ModEquipmentAsset implements DataProvider {
+    private final PackOutput.PathProvider pathProvider;
+
+    public ModEquipmentAsset(PackOutput output) {
+        this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "equipment");
+    }
+
+    private static void bootstrap(BiConsumer<ResourceKey<EquipmentAsset>, EquipmentClientInfo> output) {
+
+    }
+
+    @Override
+    public CompletableFuture<?> run(CachedOutput cachedOutput) {
+        Map<ResourceKey<EquipmentAsset>, EquipmentClientInfo> equipmentAssets = new HashMap<>();
+        bootstrap((id, asset) -> {
+            if (equipmentAssets.putIfAbsent(id, asset) != null) {
+                throw new IllegalStateException("Tried to register equipment asset twice for id: " + id);
+            }
+        });
+        return DataProvider.saveAll(cachedOutput, EquipmentClientInfo.CODEC, this.pathProvider::json, equipmentAssets);
+    }
+
+    @Override
+    public String getName() {
+        return "EzFarm Equipment Definitions";
+    }
+}

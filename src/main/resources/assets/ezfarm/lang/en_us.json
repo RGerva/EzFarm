@@ -1,5 +1,3 @@
 {
-  "itemGroup.ezfarm": "Example Mod Tab",
-  "block.ezfarm.example_block": "Example Block",
-  "item.ezfarm.example_item": "Example Item"
+  "itemGroup.ezfarm": "EzFarm Tab"
 }
