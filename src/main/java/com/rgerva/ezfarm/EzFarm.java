@@ -30,14 +30,12 @@ import com.rgerva.ezfarm.config.ModConfig;
 import com.rgerva.ezfarm.creative.ModCreativeModeTabs;
 import com.rgerva.ezfarm.entity.ModEntities;
 import com.rgerva.ezfarm.item.ModItems;
-import net.minecraft.client.Minecraft;
-import net.neoforged.api.distmarker.Dist;
+import com.rgerva.ezfarm.menu.ModMenuTypes;
+import com.rgerva.ezfarm.recipe.ModRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -46,7 +44,7 @@ import org.slf4j.Logger;
 @Mod(EzFarm.MOD_ID)
 public class EzFarm {
     public static final String MOD_ID = "ezfarm";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public EzFarm(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
@@ -57,9 +55,11 @@ public class EzFarm {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
 
-        ModBlockEntities.register(modEventBus);
-
         ModEntities.register(modEventBus);
+        ModRecipes.register(modEventBus);
+
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
 
@@ -78,14 +78,5 @@ public class EzFarm {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("HELLO from server starting");
-    }
-    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-        }
     }
 }
