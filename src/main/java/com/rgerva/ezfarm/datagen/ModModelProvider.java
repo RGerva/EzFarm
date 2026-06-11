@@ -21,6 +21,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.data.PackOutput;
 
 public class ModModelProvider extends ModelProvider {
@@ -33,5 +34,7 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.DUMMY.get(), ModelTemplates.FLAT_ITEM);
 
         blockModels.createTrivialCube(ModBlocks.DUMMY_BLOCK.get());
+
+        blockModels.createFurnace(ModBlocks.EZ_ORE_MACHINE.get(), TexturedModel.ORIENTABLE);
     }
 }

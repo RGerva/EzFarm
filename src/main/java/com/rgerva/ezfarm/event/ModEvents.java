@@ -15,8 +15,11 @@
 package com.rgerva.ezfarm.event;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.block.entity.ModBlockEntities;
+import com.rgerva.ezfarm.block.entity.machines.ModMachinesBlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -31,5 +34,6 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.ORE_MACHINE_BE.get(), ModMachinesBlockEntity::getItemHandler);
     }
 }

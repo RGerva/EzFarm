@@ -27,6 +27,8 @@ import net.minecraft.world.level.block.Block;
 public class ModTags {
     public static class Blocks {
 
+        public static final TagKey<Block> EZFARM_MACHINES = createTag("ez_farm_machines");
+
         private static TagKey<Block> createTag(String name) {
             return BlockTags.create(Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, name));
         }

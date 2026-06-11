@@ -15,10 +15,12 @@
 package com.rgerva.ezfarm.recipe;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.recipe.custom.machines.ModMachineRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModRecipes {
@@ -26,6 +28,17 @@ public class ModRecipes {
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, EzFarm.MOD_ID);
     public static final DeferredRegister<RecipeType<?>> TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, EzFarm.MOD_ID);
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ModMachineRecipe>> ORE_MACHINE_SERIALIZER =
+            SERIALIZERS.register("duplicating_ore", () -> new RecipeSerializer<>(ModMachineRecipe.CODEC, ModMachineRecipe.STREAM_CODEC));
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ModMachineRecipe>> ORE_MACHINE_TYPE =
+            TYPES.register("duplicating_ore", () -> new RecipeType<ModMachineRecipe>() {
+                @Override
+                public String toString() {
+                    return "Duplicating Ore";
+                }
+            });
 
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);

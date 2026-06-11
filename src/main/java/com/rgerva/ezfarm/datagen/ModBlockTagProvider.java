@@ -15,11 +15,12 @@
 package com.rgerva.ezfarm.datagen;
 
 import com.rgerva.ezfarm.EzFarm;
-
+import com.rgerva.ezfarm.block.ModBlocks;
+import com.rgerva.ezfarm.tag.ModTags;
 import java.util.concurrent.CompletableFuture;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
@@ -29,6 +30,13 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(ModBlocks.EZ_ORE_MACHINE.get());
 
+        tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(ModBlocks.EZ_ORE_MACHINE.get());
+
+        tag(ModTags.Blocks.EZFARM_MACHINES)
+                .add(ModBlocks.EZ_ORE_MACHINE.get());
     }
 }

@@ -15,6 +15,7 @@
 package com.rgerva.ezfarm.block;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
 import com.rgerva.ezfarm.item.ModItems;
 
 import java.util.function.Function;
@@ -33,6 +34,11 @@ public class ModBlocks {
     public static final DeferredBlock<Block> DUMMY_BLOCK = registerBlock("dummy_block",
             properties -> new Block(properties.strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
 
+    public static final DeferredBlock<Block> EZ_ORE_MACHINE = registerBlock("ore_machine",
+            properties -> new ModMachinesBlock(properties.strength(2F).requiresCorrectToolForDrops().sound(SoundType.CHAIN)));
+
+
+    //==================================================================================================================
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);
         registerBlockItem(name, toReturn);

@@ -15,10 +15,8 @@
 package com.rgerva.ezfarm.datagen;
 
 import com.rgerva.ezfarm.EzFarm;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -38,7 +36,6 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes() {
-
     }
 
     @Override

@@ -41,6 +41,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(ModBlocks.DUMMY_BLOCK.get());
+
+        dropSelf(ModBlocks.EZ_ORE_MACHINE.get());
     }
 
     protected LootTable.Builder createMultipleOreDrops(Block pBlock, Item item, float minDrops, float maxDrops) {

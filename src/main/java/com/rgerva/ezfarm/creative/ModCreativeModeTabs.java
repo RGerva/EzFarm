@@ -25,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -37,16 +36,17 @@ public class ModCreativeModeTabs {
 
 
     public static final Supplier<CreativeModeTab> ZIRCON_ITEMS_TAB = CREATIVE_MODE_TABS.register("tab.ezfarm",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(Items.IRON_BLOCK))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.DUMMY.get()))
                     .title(Component.translatable("itemGroup.ezfarm"))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.DUMMY.get());
                         output.accept(ModBlocks.DUMMY_BLOCK.get());
+                        output.accept(ModBlocks.EZ_ORE_MACHINE.get());
                     }).build());
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-
+        if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
+            event.accept(ModBlocks.EZ_ORE_MACHINE.get());
         }
     }
 
