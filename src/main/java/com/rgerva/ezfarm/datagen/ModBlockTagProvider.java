@@ -30,13 +30,12 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(ModBlocks.EZ_ORE_MACHINE.get());
-
-        tag(BlockTags.NEEDS_STONE_TOOL)
-                .add(ModBlocks.EZ_ORE_MACHINE.get());
-
-        tag(ModTags.Blocks.EZFARM_MACHINES)
-                .add(ModBlocks.EZ_ORE_MACHINE.get());
+//        tag(BlockTags.MINEABLE_WITH_PICKAXE).add();
+//
+//        tag(BlockTags.NEEDS_STONE_TOOL)
+//                .add(ModBlocks.EZ_ORE_MACHINE.get());
+//
+//        tag(ModTags.Blocks.EZFARM_MACHINES)
+//                .add(ModBlocks.EZ_ORE_MACHINE.get());
     }
 }
