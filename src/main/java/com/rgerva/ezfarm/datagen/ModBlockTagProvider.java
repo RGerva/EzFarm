@@ -15,12 +15,9 @@
 package com.rgerva.ezfarm.datagen;
 
 import com.rgerva.ezfarm.EzFarm;
-import com.rgerva.ezfarm.block.ModBlocks;
-import com.rgerva.ezfarm.tag.ModTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
