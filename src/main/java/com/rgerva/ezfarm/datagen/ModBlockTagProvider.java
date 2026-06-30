@@ -15,10 +15,14 @@
 package com.rgerva.ezfarm.datagen;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.block.ModBlocks;
+import com.rgerva.ezfarm.tag.ModTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import org.jspecify.annotations.NonNull;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
     public ModBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
@@ -26,13 +30,13 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
-//        tag(BlockTags.MINEABLE_WITH_PICKAXE).add();
-//
-//        tag(BlockTags.NEEDS_STONE_TOOL)
-//                .add(ModBlocks.EZ_ORE_MACHINE.get());
-//
-//        tag(ModTags.Blocks.EZFARM_MACHINES)
-//                .add(ModBlocks.EZ_ORE_MACHINE.get());
+    protected void addTags(HolderLookup.@NonNull Provider provider) {
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
+
+        tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
+
+        tag(ModTags.Blocks.EZFARM_MACHINES)
+                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
     }
 }

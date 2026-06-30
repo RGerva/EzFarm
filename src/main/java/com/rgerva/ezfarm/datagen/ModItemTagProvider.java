@@ -15,12 +15,13 @@
 package com.rgerva.ezfarm.datagen;
 
 import com.rgerva.ezfarm.EzFarm;
-
+import com.rgerva.ezfarm.item.ModItems;
 import java.util.concurrent.CompletableFuture;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.ItemTags;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
+import org.jspecify.annotations.NonNull;
 
 public class ModItemTagProvider extends ItemTagsProvider {
     public ModItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
@@ -28,7 +29,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
-
+    protected void addTags(HolderLookup.@NonNull Provider provider) {
+        tag(ItemTags.SWORDS).add(ModItems.getRK(ModItems.DUMMY.get()));
     }
 }

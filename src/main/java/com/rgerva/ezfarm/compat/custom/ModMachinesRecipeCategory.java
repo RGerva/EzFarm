@@ -33,11 +33,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<ModMachineRecipe>> {
@@ -46,20 +46,18 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
     private final IDrawable icon;
     private final IDrawable overlay;
 
-    public static final RecipeCategory category = RecipeCategory.valueOf("machine");
-
     public ModMachinesRecipeCategory(IGuiHelper helper) {
         this.overlay = helper.createDrawable(TEXTURE, 0, 0, 176, 85);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.EZ_ORE_MACHINE));
     }
 
     @Override
-    public IRecipeType<RecipeHolder<ModMachineRecipe>> getRecipeType() {
+    public @NonNull IRecipeType<RecipeHolder<ModMachineRecipe>> getRecipeType() {
         return ModJEIRecipeTypes.ORE_MACHINE;
     }
 
     @Override
-    public Component getTitle() {
+    public @NonNull Component getTitle() {
         return Component.translatable("block.ezfarm.ore_machine");
     }
 
@@ -79,14 +77,14 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ModMachineRecipe> recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ModMachineRecipe> recipe, @NonNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 54, 34).add(recipe.value().inputItem());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 34).add(recipe.value().output());
     }
 
     @Override
-    public void draw(RecipeHolder<ModMachineRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NonNull RecipeHolder<ModMachineRecipe> recipe, @NonNull IRecipeSlotsView recipeSlotsView, @NonNull GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         this.overlay.draw(guiGraphics, 0, 0);
 
         guiGraphics.fillGradient(156, 50, 164, 56, 0xffb51500, 0xff600b00);
