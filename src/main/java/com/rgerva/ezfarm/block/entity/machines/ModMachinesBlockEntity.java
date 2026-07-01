@@ -75,7 +75,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
 
     private final ContainerData data;
     private int progress = 0;
-    private int maxProgress = 72;
+    private int maxProgress = 1000;
 
     private static final int INPUT_SLOT = 1;
     private static final int OUTPUT_SLOT = 2;
