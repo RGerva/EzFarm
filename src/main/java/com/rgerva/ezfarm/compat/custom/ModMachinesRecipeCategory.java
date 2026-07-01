@@ -17,10 +17,8 @@ package com.rgerva.ezfarm.compat.custom;
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.compat.ModJEIRecipeTypes;
-import com.rgerva.ezfarm.menu.custom.machines.ModMachineScreen;
 import com.rgerva.ezfarm.recipe.custom.machines.ModMachineRecipe;
 
-import java.util.List;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -31,7 +29,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -47,7 +44,7 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
     private final IDrawable overlay;
 
     public ModMachinesRecipeCategory(IGuiHelper helper) {
-        this.overlay = helper.createDrawable(TEXTURE, 0, 0, 176, 85);
+        this.overlay = helper.createDrawable(TEXTURE, 0, 0, 176, 80);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.EZ_ORE_MACHINE));
     }
 
@@ -68,7 +65,7 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
 
     @Override
     public int getHeight() {
-        return 85;
+        return 80;
     }
 
     @Override
@@ -87,10 +84,10 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
     public void draw(@NonNull RecipeHolder<ModMachineRecipe> recipe, @NonNull IRecipeSlotsView recipeSlotsView, @NonNull GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         this.overlay.draw(guiGraphics, 0, 0);
 
-        guiGraphics.fillGradient(156, 50, 164, 56, 0xffb51500, 0xff600b00);
-        if (ModMachineScreen.isMouseAboveArea((int) mouseX, (int) mouseY, 0, 0, 156, 11, 8, 48)) {
-            guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, List.of(Component.literal(25 + "FE/T Needed. Total of 1800 FE.")),
-                    (int) mouseX, (int) mouseY + 110);
-        }
+//        guiGraphics.fillGradient(156, 50, 164, 56, 0xffb51500, 0xff600b00);
+//        if (ModMachineScreen.isMouseAboveArea((int) mouseX, (int) mouseY, 0, 0, 156, 11, 8, 48)) {
+//            guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, List.of(Component.literal(25 + "FE/T Needed. Total of 1800 FE.")),
+//                    (int) mouseX, (int) mouseY + 110);
+//        }
     }
 }

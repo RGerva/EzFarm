@@ -1,0 +1,8 @@
+{
+  "type": "ezfarm:ore_machine",
+  "ingredient": "minecraft:iron_ore",
+  "result": {
+    "id": "minecraft:iron_ore",
+    "count": 2
+  }
+}

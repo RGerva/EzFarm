@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
+import org.jspecify.annotations.NonNull;
 
 public class ModMachineMenu extends AbstractContainerMenu {
     public final ModMachinesBlockEntity blockEntity;
@@ -51,7 +52,7 @@ public class ModMachineMenu extends AbstractContainerMenu {
         this.addSlot(new ResourceHandlerSlot(handler, handler::set, 1, 54, 34));
         this.addSlot(new ResourceHandlerSlot(handler, handler::set, 2, 104, 34) {
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            public boolean mayPlace(@NonNull ItemStack itemStack) {
                 return false;
             }
         });
@@ -72,14 +73,52 @@ public class ModMachineMenu extends AbstractContainerMenu {
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
     }
 
+    private static final int HOTBAR_SLOT_COUNT = 9;
+    private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
+    private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
+    private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
+    private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
+    private static final int VANILLA_FIRST_SLOT_INDEX = 0;
+    private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
+    private static final int TE_INVENTORY_SLOT_COUNT = 4;  // must be the number of slots you have!
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return null;
+    public @NonNull ItemStack quickMoveStack(@NonNull Player player, int pIndex) {
+        Slot sourceSlot = slots.get(pIndex);
+        if (!sourceSlot.hasItem()) {
+            return ItemStack.EMPTY;  //EMPTY_ITEM
+        }
+        ItemStack sourceStack = sourceSlot.getItem();
+        ItemStack copyOfSourceStack = sourceStack.copy();
+
+        // Check if the slot clicked is one of the vanilla container slots
+        if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+            // This is a vanilla container slot so merge the stack into the tile inventory
+            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
+                    + TE_INVENTORY_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;  // EMPTY_ITEM
+            }
+        } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+            // This is a TE slot so merge the stack into the players inventory
+            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else {
+            System.out.println("Invalid slotIndex:" + pIndex);
+            return ItemStack.EMPTY;
+        }
+        // If stack size == 0 (the entire stack was moved) set slot contents to null
+        if (sourceStack.getCount() == 0) {
+            sourceSlot.set(ItemStack.EMPTY);
+        } else {
+            sourceSlot.setChanged();
+        }
+        sourceSlot.onTake(player, sourceStack);
+        return copyOfSourceStack;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(@NonNull Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 pPlayer, ModBlocks.EZ_ORE_MACHINE.get());
     }

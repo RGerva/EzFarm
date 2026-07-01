@@ -23,7 +23,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ModJEIRecipeTypes {
     public static final IRecipeType<RecipeHolder<ModMachineRecipe>> ORE_MACHINE =
-            create(EzFarm.MOD_ID, "duplicate_ore", ModMachineRecipe.class);
+            create(EzFarm.MOD_ID, "ore_machine", ModMachineRecipe.class);
 
     public static <R extends Recipe<?>> IRecipeType<RecipeHolder<R>> create(String modid, String name, Class<? extends R> recipeClass) {
         Identifier uid = Identifier.fromNamespaceAndPath(modid, name);

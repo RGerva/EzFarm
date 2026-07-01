@@ -30,13 +30,13 @@ public class ModRecipes {
             DeferredRegister.create(Registries.RECIPE_TYPE, EzFarm.MOD_ID);
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ModMachineRecipe>> ORE_MACHINE_SERIALIZER =
-            SERIALIZERS.register("duplicating_ore", () -> new RecipeSerializer<>(ModMachineRecipe.CODEC, ModMachineRecipe.STREAM_CODEC));
+            SERIALIZERS.register("ore_machine", () -> new RecipeSerializer<>(ModMachineRecipe.CODEC, ModMachineRecipe.STREAM_CODEC));
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<ModMachineRecipe>> ORE_MACHINE_TYPE =
-            TYPES.register("duplicating_ore", () -> new RecipeType<ModMachineRecipe>() {
+            TYPES.register("ore_machine", () -> new RecipeType<>() {
                 @Override
                 public String toString() {
-                    return "Duplicating Ore";
+                    return "Ore Machine";
                 }
             });
 

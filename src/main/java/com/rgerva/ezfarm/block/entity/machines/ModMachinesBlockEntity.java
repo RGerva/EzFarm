@@ -14,6 +14,8 @@
 
 package com.rgerva.ezfarm.block.entity.machines;
 
+import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
 import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.menu.custom.machines.ModMachineMenu;
@@ -53,13 +55,14 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider {
     public final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(4) {
 
         @Override
-        protected void onContentsChanged(int index, ItemStack previousContents) {
+        protected void onContentsChanged(int index, @NonNull ItemStack previousContents) {
             super.onContentsChanged(index, previousContents);
             ModMachinesBlockEntity.this.setChanged();
         }
@@ -108,17 +111,17 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NonNull Component getDisplayName() {
         return Component.translatable("block.ezfarm.ore_machine");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int i, @NonNull Inventory inventory, @NonNull Player player) {
         return new ModMachineMenu(i, inventory, this, this.inventory, this.data);
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
+    protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("ore_machine.progress", progress);
         output.putInt("ore_machine.max_progress", maxProgress);
@@ -127,7 +130,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
+    protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
         progress = input.getIntOr("ore_machine.progress", 0);
         maxProgress = input.getIntOr("ore_machine.max_progress", 72);
@@ -138,9 +141,10 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     public void drops() {
         SimpleContainer inv = new SimpleContainer(inventory.size());
         for (int i = 0; i < inventory.size(); i++) {
-            ItemAccess itemAccess = ItemAccess.forHandlerIndex(inventory, 0);
+            ItemAccess itemAccess = ItemAccess.forHandlerIndex(inventory, i);
             inv.setItem(i, new ItemStack(itemAccess.getResource().getItem(), itemAccess.getAmount()));
         }
+        assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, inv);
     }
 
@@ -189,6 +193,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     private void craftItem() {
         Optional<RecipeHolder<ModMachineRecipe>> recipe = getCurrentRecipe();
         ItemStack output = recipe.get().value().output().create();
+        EzFarm.LOGGER.info("Crafting Item: {}: {}", ModBlocks.EZ_ORE_MACHINE.get(), recipe.get().value());
 
         try (Transaction transaction = Transaction.openRoot()) {
             ItemAccess itemAccess = ItemAccess.forHandlerIndex(inventory, OUTPUT_SLOT);
@@ -254,7 +259,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    public @NonNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registries) {
         return saveWithoutMetadata(registries);
     }
 }
