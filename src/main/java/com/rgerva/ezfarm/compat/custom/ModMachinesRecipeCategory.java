@@ -39,12 +39,12 @@ import org.jspecify.annotations.Nullable;
 
 public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<ModMachineRecipe>> {
     public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(EzFarm.MOD_ID,
-            "textures/gui/machines/ore_machine_gui.png");
+            "textures/gui/machines/ore_machine_jei.png");
     private final IDrawable icon;
     private final IDrawable overlay;
 
     public ModMachinesRecipeCategory(IGuiHelper helper) {
-        this.overlay = helper.createDrawable(TEXTURE, 0, 0, 176, 80);
+        this.overlay = helper.createDrawable(TEXTURE, 0, 0, 176, 85);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.EZ_ORE_MACHINE));
     }
 
@@ -65,7 +65,7 @@ public class ModMachinesRecipeCategory implements IRecipeCategory<RecipeHolder<M
 
     @Override
     public int getHeight() {
-        return 80;
+        return 85;
     }
 
     @Override
