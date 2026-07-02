@@ -32,6 +32,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jspecify.annotations.NonNull;
 
 public class ModBlockLootTableProvider extends BlockLootSubProvider {
     public ModBlockLootTableProvider(HolderLookup.Provider registries) {
@@ -40,8 +41,6 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        dropSelf(ModBlocks.DUMMY_BLOCK.get());
-
         dropSelf(ModBlocks.EZ_ORE_MACHINE.get());
     }
 
@@ -54,7 +53,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     }
 
     @Override
-    protected Iterable<Block> getKnownBlocks() {
+    protected @NonNull Iterable<Block> getKnownBlocks() {
         return ModBlocks.BLOCKS.getEntries().stream().map(Holder::value)::iterator;
     }
 

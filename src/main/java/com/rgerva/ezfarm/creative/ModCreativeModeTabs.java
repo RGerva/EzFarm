@@ -35,18 +35,22 @@ public class ModCreativeModeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EzFarm.MOD_ID);
 
 
-    public static final Supplier<CreativeModeTab> ZIRCON_ITEMS_TAB = CREATIVE_MODE_TABS.register("tab.ezfarm",
+    public static final Supplier<CreativeModeTab> EZFARM_ITEMS_TAB = CREATIVE_MODE_TABS.register("tab.ezfarm",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.DUMMY.get()))
                     .title(Component.translatable("itemGroup.ezfarm"))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.DUMMY.get());
-                        output.accept(ModBlocks.DUMMY_BLOCK.get());
                         output.accept(ModBlocks.EZ_ORE_MACHINE.get());
+                        output.accept(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
                     }).build());
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
             event.accept(ModBlocks.EZ_ORE_MACHINE.get());
+        }
+
+        if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS) {
+            event.accept(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
         }
     }
 

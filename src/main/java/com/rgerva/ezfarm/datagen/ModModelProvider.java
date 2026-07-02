@@ -33,7 +33,7 @@ public class ModModelProvider extends ModelProvider {
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.DUMMY.get(), ModelTemplates.FLAT_ITEM);
 
-        blockModels.createTrivialCube(ModBlocks.DUMMY_BLOCK.get());
+        blockModels.createTrivialCube(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
 
         blockModels.createFurnace(ModBlocks.EZ_ORE_MACHINE.get(), TexturedModel.ORIENTABLE);
     }

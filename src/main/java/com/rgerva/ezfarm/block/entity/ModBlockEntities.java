@@ -16,6 +16,7 @@ package com.rgerva.ezfarm.block.entity;
 
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
+import com.rgerva.ezfarm.block.entity.generators.ModGeneratorBlockEntity;
 import com.rgerva.ezfarm.block.entity.machines.ModMachinesBlockEntity;
 
 import java.util.function.Supplier;
@@ -32,6 +33,10 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<ModMachinesBlockEntity>> ORE_MACHINE_BE =
             BLOCK_ENTITIES.register("ore_machine_be",
                     () -> new BlockEntityType<>(ModMachinesBlockEntity::new, ModBlocks.EZ_ORE_MACHINE.get()));
+
+    public static final Supplier<BlockEntityType<ModGeneratorBlockEntity>> CREATIVE_GENERATOR_BE =
+            BLOCK_ENTITIES.register("creative_generator_be",
+                    () -> new BlockEntityType<>(ModGeneratorBlockEntity::new, ModBlocks.CREATIVE_ENERGY_GENERATOR.get()));
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
