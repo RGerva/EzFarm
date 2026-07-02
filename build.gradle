@@ -127,6 +127,9 @@ dependencies {
 
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
+    runtimeOnly "curse.maven:jade-324717:8326243"
+    runtimeOnly "curse.maven:pipez-443900:8351639"
+    runtimeOnly "curse.maven:energized-power-782147:8335154"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:6.1.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.1.0'

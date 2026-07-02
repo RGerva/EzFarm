@@ -35,16 +35,16 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class ModGeneratorBlockEntity extends BlockEntity implements MenuProvider {
 
-    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 6400) {
+    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 0, 64000, 64000) {
         @Override
         protected void onEnergyChanged(int previousAmount) {
             super.onEnergyChanged(previousAmount);
+            setChanged();
             assert getLevel() != null;
             getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
@@ -77,10 +77,7 @@ public class ModGeneratorBlockEntity extends BlockEntity implements MenuProvider
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        try (Transaction transaction = Transaction.openRoot()) {
-            this.ENERGY_STORAGE.insert(this.ENERGY_STORAGE.getCapacityAsInt(), transaction);
-            transaction.commit();
-        }
+        this.ENERGY_STORAGE.set(this.ENERGY_STORAGE.getCapacityAsInt());
         setChanged(level, pos, state);
     }
 
