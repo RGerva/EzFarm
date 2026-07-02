@@ -15,6 +15,7 @@
 package com.rgerva.ezfarm.menu.custom.machines;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.menu.custom.renderer.EnergyDisplayTooltipArea;
 import com.rgerva.ezfarm.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -29,6 +30,7 @@ public class ModMachineScreen extends AbstractContainerScreen<ModMachineMenu> {
             Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, "textures/gui/machines/ore_machine_gui.png");
     private static final Identifier ARROW_TEXTURE =
             Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, "textures/gui/machines/arrow_progress.png");
+    private EnergyDisplayTooltipArea energyInfoArea;
 
     public ModMachineScreen(ModMachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -40,6 +42,19 @@ public class ModMachineScreen extends AbstractContainerScreen<ModMachineMenu> {
 
         this.inventoryLabelX = 65;
         this.titleLabelX = 35;
+
+        assignEnergyInfoArea();
+    }
+
+    private void assignEnergyInfoArea() {
+        energyInfoArea = new EnergyDisplayTooltipArea(((width - imageWidth) / 2) + 152,
+                ((height - imageHeight) / 2) + 6, menu.blockEntity.getEnergyStorage(null), 16, 51);
+    }
+
+    private void renderEnergyAreaTooltip(GuiGraphicsExtractor guiGraphics, int pMouseX, int pMouseY, int x, int y) {
+        if (isMouseAboveArea(pMouseX, pMouseY, x, y, 152, 7, 16, 51)) {
+            guiGraphics.setComponentTooltipForNextFrame(this.font, energyInfoArea.getTooltips(), pMouseX, pMouseY);
+        }
     }
 
     @Override
@@ -47,6 +62,8 @@ public class ModMachineScreen extends AbstractContainerScreen<ModMachineMenu> {
         super.extractLabels(graphics, xm, ym);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
+
+        renderEnergyAreaTooltip(graphics, xm, ym, x, y);
     }
 
     @Override
@@ -57,6 +74,8 @@ public class ModMachineScreen extends AbstractContainerScreen<ModMachineMenu> {
         int y = (height - imageHeight) / 2;
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+
+        energyInfoArea.render(graphics);
 
         renderProgressArrow(graphics, x, y);
     }

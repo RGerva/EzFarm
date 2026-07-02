@@ -52,6 +52,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -70,6 +72,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
 
     private final ResourceHandler<ItemResource> topHandler = RangedResourceHandler.of(inventory, INPUT_SLOT, INPUT_SLOT + 1);
     private final ResourceHandler<ItemResource> bottomHandler = RangedResourceHandler.of(inventory, OUTPUT_SLOT, OUTPUT_SLOT + 1);
+    private final ResourceHandler<ItemResource> rightHandler = RangedResourceHandler.of(inventory, ENERGY_ITEM_SLOT, ENERGY_ITEM_SLOT + 1);
 
     private final ResourceHandler<ItemResource> frontBackHandler = RangedResourceHandler.of(inventory, INPUT_SLOT, OUTPUT_SLOT + 1);
 
@@ -79,6 +82,18 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
 
     private static final int INPUT_SLOT = 1;
     private static final int OUTPUT_SLOT = 2;
+    private static final int ENERGY_ITEM_SLOT = 3;
+
+    private static final int ENERGY_CRAFT_AMOUNT = 25;      // per tick
+
+    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 320) {
+        @Override
+        protected void onEnergyChanged(int previousAmount) {
+            super.onEnergyChanged(previousAmount);
+            assert getLevel() != null;
+            getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
+    };
 
     public ModMachinesBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ModBlockEntities.ORE_MACHINE_BE.get(), worldPosition, blockState);
@@ -127,6 +142,8 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
         output.putInt("ore_machine.max_progress", maxProgress);
 
         output.putChild("inventory", inventory);
+
+        ENERGY_STORAGE.serialize(output);
     }
 
     @Override
@@ -136,6 +153,8 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
         maxProgress = input.getIntOr("ore_machine.max_progress", 72);
 
         input.child("inventory").ifPresent(inventory::deserialize);
+
+        ENERGY_STORAGE.deserialize(input);
     }
 
     public void drops() {
@@ -159,7 +178,8 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
             case DOWN -> topHandler;
             case UP -> bottomHandler;
             case NORTH, SOUTH -> frontBackHandler;
-            case WEST, EAST -> null;
+            case WEST -> null;
+            case EAST -> rightHandler;
         };
     }
 
@@ -176,7 +196,12 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (hasRecipe() && isOutputSlotEmptyOrReceivable()) {
-            increaseCraftingProgress();
+            if (hasEnoughEnergyToCraft()) {
+                increaseCraftingProgress(10);
+                useEnergyForCrafting();
+            } else {
+                this.progress++;
+            }
             setChanged(level, pos, state);
             level.setBlockAndUpdate(pos, state.setValue(ModMachinesBlock.LIT, true));
 
@@ -214,6 +239,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
         boolean outputSlotAmount = canInsertAmountIntoOutputSlot(output.getCount());
         boolean outputSlotItem = canInsertItemIntoOutputSlot(output);
 
+
         return outputSlotItem && outputSlotAmount;
     }
 
@@ -241,8 +267,8 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
                 inventory.getResource(OUTPUT_SLOT).test(stack -> stack.count() < stack.getMaxStackSize());
     }
 
-    private void increaseCraftingProgress() {
-        this.progress++;
+    private void increaseCraftingProgress(int multiplier) {
+        this.progress = this.progress + multiplier;
     }
 
     private boolean hasCraftingFinished() {
@@ -251,6 +277,29 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
 
     private void resetProgress() {
         this.progress = 0;
+    }
+
+    public EnergyHandler getEnergyStorage(@Nullable Direction direction) {
+        return this.ENERGY_STORAGE;
+    }
+
+    private boolean hasEnoughEnergyToCraft() {
+//        return this.ENERGY_STORAGE.getAmountAsInt() >= ENERGY_CRAFT_AMOUNT * maxProgress;
+        return this.ENERGY_STORAGE.getAmountAsInt() > 0;
+    }
+
+    private void useEnergyForCrafting() {
+        try (Transaction transaction = Transaction.openRoot()) {
+            this.ENERGY_STORAGE.extract(ENERGY_CRAFT_AMOUNT, transaction);
+            transaction.commit();
+        }
+    }
+
+    private void fillUpOnEnergy() {
+        try (Transaction transaction = Transaction.openRoot()) {
+            this.ENERGY_STORAGE.insert(160, transaction);
+            transaction.commit();
+        }
     }
 
     @Override
