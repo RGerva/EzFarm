@@ -27,7 +27,11 @@ import net.minecraft.world.level.block.Block;
 public class ModTags {
     public static class Blocks {
 
+        public static final TagKey<Block> EZFARM_CREATIVE = createTag("ez_farm_creative");
         public static final TagKey<Block> EZFARM_MACHINES = createTag("ez_farm_machines");
+        public static final TagKey<Block> EZFARM_CABLES = createTag("ez_farm_cables");
+        public static final TagKey<Block> EZFARM_GENERATORS = createTag("ez_farm_generator");
+        public static final TagKey<Block> EZFARM_ENERGY = createTag("ez_farm_energy");
 
         private static TagKey<Block> createTag(String name) {
             return BlockTags.create(Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, name));

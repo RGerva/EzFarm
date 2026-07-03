@@ -15,6 +15,7 @@
 package com.rgerva.ezfarm.block;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.block.custom.cables.ModCableBlock;
 import com.rgerva.ezfarm.block.custom.generators.ModGeneratorBlock;
 import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
 import com.rgerva.ezfarm.item.ModItems;
@@ -39,6 +40,9 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> CREATIVE_ENERGY_GENERATOR = registerBlock("creative_energy_generator",
             properties -> new ModGeneratorBlock(properties.noLootTable()));
+
+    public static final DeferredBlock<Block> COPPER_CABLE = registerBlock("cable_copper",
+            properties -> new ModCableBlock(properties.strength(1F).requiresCorrectToolForDrops()));
 
     //==================================================================================================================
     public static ResourceKey<Block> getRK(Block block) {

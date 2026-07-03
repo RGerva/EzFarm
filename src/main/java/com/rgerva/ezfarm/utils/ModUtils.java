@@ -14,6 +14,9 @@
 
 package com.rgerva.ezfarm.utils;
 
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
 public class ModUtils {
     public static boolean isMouseOver(double mouseX, double mouseY, int x, int y) {
         return isMouseOver(mouseX, mouseY, x, y, 16);
@@ -26,4 +29,19 @@ public class ModUtils {
     public static boolean isMouseOver(double mouseX, double mouseY, int x, int y, int sizeX, int sizeY) {
         return (mouseX >= x && mouseX <= x + sizeX) && (mouseY >= y && mouseY <= y + sizeY);
     }
+
+    public static VoxelShape combine(VoxelShape... shapes) {
+        if (shapes.length == 0) {
+            return Shapes.empty();
+        }
+
+        VoxelShape combined = shapes[0];
+
+        for (int i = 1; i < shapes.length; i++) {
+            combined = Shapes.or(combined, shapes[i]);
+        }
+
+        return combined;
+    }
+
 }

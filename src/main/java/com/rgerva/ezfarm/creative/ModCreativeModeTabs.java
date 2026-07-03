@@ -36,12 +36,13 @@ public class ModCreativeModeTabs {
 
 
     public static final Supplier<CreativeModeTab> EZFARM_ITEMS_TAB = CREATIVE_MODE_TABS.register("tab.ezfarm",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.DUMMY.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.CREATIVE_ENERGY_GENERATOR.get()))
                     .title(Component.translatable("itemGroup.ezfarm"))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.DUMMY.get());
                         output.accept(ModBlocks.EZ_ORE_MACHINE.get());
                         output.accept(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
+                        output.accept(ModBlocks.COPPER_CABLE.get());
                     }).build());
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
