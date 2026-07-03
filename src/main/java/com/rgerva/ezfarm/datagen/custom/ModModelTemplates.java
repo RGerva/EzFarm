@@ -17,7 +17,6 @@ package com.rgerva.ezfarm.datagen.custom;
 import static com.rgerva.ezfarm.EzFarm.MOD_ID;
 
 import java.util.Optional;
-
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.resources.Identifier;

@@ -17,7 +17,6 @@ package com.rgerva.ezfarm.block.custom.cables;
 import com.mojang.serialization.MapCodec;
 import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.block.entity.cables.ModCableBlockEntity;
-import com.rgerva.ezfarm.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
