@@ -17,13 +17,14 @@ package com.rgerva.ezfarm.compat;
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.compat.custom.ModMachinesRecipeCategory;
+import com.rgerva.ezfarm.compat.custom.TreeFarmRecipeCategory;
 import com.rgerva.ezfarm.menu.custom.machines.ModMachineScreen;
+import com.rgerva.ezfarm.menu.custom.machines.TreeFarmScreen;
 import com.rgerva.ezfarm.recipe.ModRecipes;
-
 import java.util.List;
-
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +34,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import org.jspecify.annotations.NonNull;
 
 @JeiPlugin
 public class ModJEIPlugin implements IModPlugin {
@@ -40,7 +42,7 @@ public class ModJEIPlugin implements IModPlugin {
     private static RecipeMap syncedRecipes = RecipeMap.EMPTY;
 
     @Override
-    public Identifier getPluginUid() {
+    public @NonNull Identifier getPluginUid() {
         return Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, "jei_plugin");
     }
 
@@ -51,23 +53,30 @@ public class ModJEIPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-        registration.addRecipeCategories(new ModMachinesRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
+        registration.addRecipeCategories(new ModMachinesRecipeCategory(guiHelper));
+        registration.addRecipeCategories(new TreeFarmRecipeCategory(guiHelper));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(ModJEIRecipeTypes.ORE_MACHINE, this.getRecipes(syncedRecipes, ModRecipes.ORE_MACHINE_TYPE.get()));
+        registration.addRecipes(ModJEIRecipeTypes.TREE_FARM_MACHINE_JEI, this.getRecipes(syncedRecipes, ModRecipes.TREE_FARM_MACHINE_TYPE.get()));
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(ModMachineScreen.class, 74, 30, 22, 20,
                 ModJEIRecipeTypes.ORE_MACHINE);
+
+        registration.addRecipeClickArea(TreeFarmScreen.class, 74, 30, 22, 20,
+                ModJEIRecipeTypes.TREE_FARM_MACHINE_JEI);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addCraftingStation(ModJEIRecipeTypes.ORE_MACHINE, new ItemStack(ModBlocks.EZ_ORE_MACHINE.asItem()));
+        registration.addCraftingStation(ModJEIRecipeTypes.TREE_FARM_MACHINE_JEI, new ItemStack(ModBlocks.TREE_FARM_MACHINE.asItem()));
     }
 
     @EventBusSubscriber(modid = EzFarm.MOD_ID)
@@ -75,7 +84,8 @@ public class ModJEIPlugin implements IModPlugin {
         @SubscribeEvent
         public static void onDatapackSync(OnDatapackSyncEvent event) {
             event.sendRecipes(
-                    ModRecipes.ORE_MACHINE_TYPE.get()
+                    ModRecipes.ORE_MACHINE_TYPE.get(),
+                    ModRecipes.TREE_FARM_MACHINE_TYPE.get()
             );
         }
     }

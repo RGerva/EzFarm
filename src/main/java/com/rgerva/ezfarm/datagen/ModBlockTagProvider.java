@@ -58,7 +58,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(ModTags.Blocks.EZFARM_GENERATORS)
                 .add(ModBlocks.getRK(ModBlocks.CREATIVE_ENERGY_GENERATOR.get()));
 
-        tag(ModTags.Blocks.EZFARM_ENERGY)
+        tag(ModTags.Blocks.EZFARM_BLOCK_ENERGY)
                 .add(ModBlocks.getRK(ModBlocks.CREATIVE_ENERGY_GENERATOR.get()))
                 .add(ModBlocks.getRK(ModBlocks.COPPER_CABLE.get()))
                 .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()))

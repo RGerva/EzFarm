@@ -150,7 +150,7 @@ public class ModMachinesBlockEntity extends BlockEntity implements MenuProvider 
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
         progress = input.getIntOr("ore_machine.progress", 0);
-        maxProgress = input.getIntOr("ore_machine.max_progress", 72);
+        maxProgress = input.getIntOr("ore_machine.max_progress", 1000);
 
         input.child("inventory").ifPresent(inventory::deserialize);
 

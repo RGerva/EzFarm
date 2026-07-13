@@ -17,13 +17,16 @@ package com.rgerva.ezfarm.menu.custom.machines;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.block.entity.machines.ModMachinesBlockEntity;
 import com.rgerva.ezfarm.menu.ModMenuTypes;
+import com.rgerva.ezfarm.tag.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jspecify.annotations.NonNull;
@@ -48,15 +51,33 @@ public class ModMachineMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 0, 8, 62));
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 1, 54, 34));
+        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 0, 8, 62) {
+            @Override
+            public boolean mayPlace(@NonNull ItemStack stack) {
+                return stack.is(Items.WATER_BUCKET);
+            }
+        });
+
+        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 1, 54, 34) {
+            @Override
+            public boolean mayPlace(@NonNull ItemStack stack) {
+                return stack.is(Tags.Items.ORES);
+            }
+        });
+
         this.addSlot(new ResourceHandlerSlot(handler, handler::set, 2, 104, 34) {
             @Override
             public boolean mayPlace(@NonNull ItemStack itemStack) {
                 return false;
             }
         });
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 3, 152, 62));
+
+        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 3, 152, 62) {
+            @Override
+            public boolean mayPlace(@NonNull ItemStack stack) {
+                return stack.is(ModTags.Items.EZFARM_ITEM_ENERGY);
+            }
+        });
 
         addDataSlots(data);
     }

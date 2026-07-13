@@ -17,6 +17,7 @@ package com.rgerva.ezfarm.datagen;
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.recipe.custom.machines.ModMachineRecipeBuilder;
+import com.rgerva.ezfarm.recipe.custom.machines.tree.TreeFarmRecipeBuilder;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
@@ -64,6 +65,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('Z', Items.STICK)
                 .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
                 .save(output);
+
+        customTreeFarm(Items.OAK_SAPLING, Items.OAK_LOG, 4);
     }
 
     @Override
@@ -82,6 +85,12 @@ public class ModRecipeProvider extends RecipeProvider {
         ModMachineRecipeBuilder.oreMachine(Ingredient.of(input), new ItemStackTemplate(result.asItem(), count))
                 .unlockedBy(getHasName(ModBlocks.EZ_ORE_MACHINE.get()), has(input))
                 .save(this.output, EzFarm.MOD_ID + ":" + getItemName(ModBlocks.EZ_ORE_MACHINE.get()) + "_duplicate_" + getItemName(input));
+    }
+
+    protected void customTreeFarm(ItemLike input, ItemLike result, int count) {
+        TreeFarmRecipeBuilder.treeFarmRecipe(Ingredient.of(input), new ItemStackTemplate(result.asItem(), count))
+                .unlockedBy(getHasName(ModBlocks.TREE_FARM_MACHINE.get()), has(input))
+                .save(this.output, EzFarm.MOD_ID + ":" + getItemName(ModBlocks.TREE_FARM_MACHINE.get()) + "_duplicate_" + getItemName(input));
     }
 
     public static class Runner extends RecipeProvider.Runner {

@@ -1,5 +1,5 @@
 /**
- * Generic Class: ModMachineRecipeBuilder <T>
+ * Generic Class: TreeFarmRecipeBuilder <T>
  * A generic structure that works with type parameters.
  *
  * <p>Created by: superuser
@@ -12,7 +12,7 @@
  * <p>Licensed under the GNU General Public License, Version 3.0.
  */
 
-package com.rgerva.ezfarm.recipe.custom.machines;
+package com.rgerva.ezfarm.recipe.custom.machines.tree;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.triggers.Criterion;
@@ -25,25 +25,25 @@ import net.minecraft.world.item.crafting.Recipe;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class ModMachineRecipeBuilder implements RecipeBuilder {
+public class TreeFarmRecipeBuilder implements RecipeBuilder {
 
     private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
     private final Ingredient ingredient;
     private final ItemStackTemplate result;
 
-    private ModMachineRecipeBuilder(Ingredient ingredient, ItemStackTemplate result) {
+    public TreeFarmRecipeBuilder(Ingredient ingredient, ItemStackTemplate result) {
         this.ingredient = ingredient;
         this.result = result;
     }
 
-    public static ModMachineRecipeBuilder oreMachine(Ingredient ingredient, ItemStackTemplate result) {
-        return new ModMachineRecipeBuilder(ingredient, result);
+    public static TreeFarmRecipeBuilder treeFarmRecipe(Ingredient ingredient, ItemStackTemplate result) {
+        return new TreeFarmRecipeBuilder(ingredient, result);
     }
 
     @Override
-    public @NonNull RecipeBuilder unlockedBy(@NonNull String name, @NonNull Criterion<?> criterion) {
-        advancement.addCriterion(name, criterion);
+    public @NonNull RecipeBuilder unlockedBy(@NonNull String s, @NonNull Criterion<?> criterion) {
+        advancement.addCriterion(s, criterion);
         return this;
     }
 
@@ -58,11 +58,7 @@ public class ModMachineRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput output, @NonNull ResourceKey<Recipe<?>> key) {
-        output.accept(
-                key,
-                new ModMachineRecipe(ingredient, result),
-                advancement.build(key.identifier())
-        );
+    public void save(RecipeOutput recipeOutput, @NonNull ResourceKey<Recipe<?>> resourceKey) {
+        recipeOutput.accept(resourceKey, new TreeFarmRecipe(ingredient, result), advancement.build(resourceKey.identifier()));
     }
 }

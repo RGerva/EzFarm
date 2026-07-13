@@ -31,7 +31,7 @@ public class ModTags {
         public static final TagKey<Block> EZFARM_MACHINES = createTag("ez_farm_machines");
         public static final TagKey<Block> EZFARM_CABLES = createTag("ez_farm_cables");
         public static final TagKey<Block> EZFARM_GENERATORS = createTag("ez_farm_generator");
-        public static final TagKey<Block> EZFARM_ENERGY = createTag("ez_farm_energy");
+        public static final TagKey<Block> EZFARM_BLOCK_ENERGY = createTag("ez_farm_block_energy");
 
         private static TagKey<Block> createTag(String name) {
             return BlockTags.create(Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, name));
@@ -39,6 +39,9 @@ public class ModTags {
     }
 
     public static class Items {
+
+        public static final TagKey<Item> EZFARM_ITEM_ENERGY = createTag("ez_farm_item_energy");
+
         private static TagKey<Item> createTag(String name) {
             return ItemTags.create(Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, name));
         }

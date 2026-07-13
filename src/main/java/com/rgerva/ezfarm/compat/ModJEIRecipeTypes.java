@@ -16,6 +16,7 @@ package com.rgerva.ezfarm.compat;
 
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.recipe.custom.machines.ModMachineRecipe;
+import com.rgerva.ezfarm.recipe.custom.machines.tree.TreeFarmRecipe;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
@@ -23,10 +24,13 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ModJEIRecipeTypes {
     public static final IRecipeType<RecipeHolder<ModMachineRecipe>> ORE_MACHINE =
-            create(EzFarm.MOD_ID, "ore_machine", ModMachineRecipe.class);
+            create("ore_machine", ModMachineRecipe.class);
 
-    public static <R extends Recipe<?>> IRecipeType<RecipeHolder<R>> create(String modid, String name, Class<? extends R> recipeClass) {
-        Identifier uid = Identifier.fromNamespaceAndPath(modid, name);
+    public static final IRecipeType<RecipeHolder<TreeFarmRecipe>> TREE_FARM_MACHINE_JEI =
+            create("tree_farm_machine", TreeFarmRecipe.class);
+
+    public static <R extends Recipe<?>> IRecipeType<RecipeHolder<R>> create(String name, Class<? extends R> recipeClass) {
+        Identifier uid = Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, name);
         @SuppressWarnings({"unchecked", "RedundantCast"})
         Class<? extends RecipeHolder<R>> holderClass = (Class<? extends RecipeHolder<R>>) (Object) RecipeHolder.class;
         return IRecipeType.create(uid, holderClass);
