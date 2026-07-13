@@ -19,7 +19,7 @@ import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.block.entity.cables.ModCableBlockEntity;
 import com.rgerva.ezfarm.block.entity.generators.ModGeneratorBlockEntity;
 import com.rgerva.ezfarm.block.entity.machines.ModMachinesBlockEntity;
-
+import com.rgerva.ezfarm.block.entity.machines.TreeFarmBlockEntity;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,6 +34,10 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<ModMachinesBlockEntity>> ORE_MACHINE_BE =
             BLOCK_ENTITIES.register("ore_machine_be",
                     () -> new BlockEntityType<>(ModMachinesBlockEntity::new, ModBlocks.EZ_ORE_MACHINE.get()));
+
+    public static final Supplier<BlockEntityType<TreeFarmBlockEntity>> TREE_FARM_MACHINE_BE =
+            BLOCK_ENTITIES.register("tree_farm_machine_be",
+                    () -> new BlockEntityType<>(TreeFarmBlockEntity::new, ModBlocks.TREE_FARM_MACHINE.get()));
 
     public static final Supplier<BlockEntityType<ModGeneratorBlockEntity>> CREATIVE_GENERATOR_BE =
             BLOCK_ENTITIES.register("creative_generator_be",

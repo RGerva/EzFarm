@@ -2,5 +2,6 @@
   "itemGroup.ezfarm": "EzFarm Tab",
   "block.ezfarm.creative_energy_generator": "Creative Energy Generator",
   "block.ezfarm.ore_machine": "Ore Duplicate Machine",
+  "block.ezfarm.tree_farm_machine": "Tree Farm",
   "block.ezfarm.cable_copper": "Copper Cable"
 }

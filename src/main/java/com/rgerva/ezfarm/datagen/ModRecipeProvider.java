@@ -56,6 +56,14 @@ public class ModRecipeProvider extends RecipeProvider {
 
         customMachine(Items.COAL_ORE, Items.COAL_ORE, 2);
         customMachine(Items.DEEPSLATE_COAL_ORE, Items.DEEPSLATE_COAL_ORE, 2);
+
+        shaped(RecipeCategory.REDSTONE, ModBlocks.TREE_FARM_MACHINE.get())
+                .pattern("ZZZ")
+                .pattern("ZZZ")
+                .pattern("ZZZ")
+                .define('Z', Items.STICK)
+                .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
+                .save(output);
     }
 
     @Override

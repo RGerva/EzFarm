@@ -17,6 +17,7 @@ package com.rgerva.ezfarm.menu;
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.menu.custom.generators.ModGeneratorMenu;
 import com.rgerva.ezfarm.menu.custom.machines.ModMachineMenu;
+import com.rgerva.ezfarm.menu.custom.machines.TreeFarmMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -32,6 +33,9 @@ public class ModMenuTypes {
 
     public static final DeferredHolder<MenuType<?>, MenuType<ModMachineMenu>> ORE_MACHINE_MENU =
             registerMenuType("ore_machine_menu", ModMachineMenu::new);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<TreeFarmMenu>> TREE_FARM_MACHINE_MENU =
+            registerMenuType("tree_farm_machine_menu", TreeFarmMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<ModGeneratorMenu>> CREATIVE_GENERATOR_MENU =
             registerMenuType("creative_generator_menu", ModGeneratorMenu::new);

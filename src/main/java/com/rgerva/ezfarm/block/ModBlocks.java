@@ -18,6 +18,7 @@ import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.custom.cables.ModCableBlock;
 import com.rgerva.ezfarm.block.custom.generators.ModGeneratorBlock;
 import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
+import com.rgerva.ezfarm.block.custom.machines.TreeFarmBlock;
 import com.rgerva.ezfarm.item.ModItems;
 
 import java.util.function.Function;
@@ -37,6 +38,9 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> EZ_ORE_MACHINE = registerBlock("ore_machine",
             properties -> new ModMachinesBlock(properties.strength(2F).requiresCorrectToolForDrops().sound(SoundType.CHAIN)));
+
+    public static final DeferredBlock<Block> TREE_FARM_MACHINE = registerBlock("tree_farm_machine",
+            properties -> new TreeFarmBlock(properties.requiresCorrectToolForDrops().sound(SoundType.WOOD)));
 
     public static final DeferredBlock<Block> CREATIVE_ENERGY_GENERATOR = registerBlock("creative_energy_generator",
             properties -> new ModGeneratorBlock(properties.noLootTable()));

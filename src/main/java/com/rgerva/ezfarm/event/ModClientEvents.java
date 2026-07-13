@@ -18,6 +18,7 @@ import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.menu.ModMenuTypes;
 import com.rgerva.ezfarm.menu.custom.generators.ModGeneratorScreen;
 import com.rgerva.ezfarm.menu.custom.machines.ModMachineScreen;
+import com.rgerva.ezfarm.menu.custom.machines.TreeFarmScreen;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,6 +46,7 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.ORE_MACHINE_MENU.get(), ModMachineScreen::new);
+        event.register(ModMenuTypes.TREE_FARM_MACHINE_MENU.get(), TreeFarmScreen::new);
         event.register(ModMenuTypes.CREATIVE_GENERATOR_MENU.get(), ModGeneratorScreen::new);
     }
 }

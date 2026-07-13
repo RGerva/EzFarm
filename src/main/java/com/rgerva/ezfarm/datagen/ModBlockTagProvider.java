@@ -35,17 +35,22 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()))
                 .add(ModBlocks.getRK(ModBlocks.COPPER_CABLE.get()));
 
+        tag(BlockTags.MINEABLE_WITH_AXE)
+                .add(ModBlocks.getRK(ModBlocks.TREE_FARM_MACHINE.get()));
+
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.getRK(ModBlocks.COPPER_CABLE.get()));
 
         tag(BlockTags.NEEDS_STONE_TOOL)
-                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
+                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()))
+                .add(ModBlocks.getRK(ModBlocks.TREE_FARM_MACHINE.get()));
 
         tag(ModTags.Blocks.EZFARM_CREATIVE)
                 .add(ModBlocks.getRK(ModBlocks.CREATIVE_ENERGY_GENERATOR.get()));
 
         tag(ModTags.Blocks.EZFARM_MACHINES)
-                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
+                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()))
+                .add(ModBlocks.getRK(ModBlocks.TREE_FARM_MACHINE.get()));
 
         tag(ModTags.Blocks.EZFARM_CABLES)
                 .add(ModBlocks.getRK(ModBlocks.COPPER_CABLE.get()));
@@ -56,6 +61,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(ModTags.Blocks.EZFARM_ENERGY)
                 .add(ModBlocks.getRK(ModBlocks.CREATIVE_ENERGY_GENERATOR.get()))
                 .add(ModBlocks.getRK(ModBlocks.COPPER_CABLE.get()))
-                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()));
+                .add(ModBlocks.getRK(ModBlocks.EZ_ORE_MACHINE.get()))
+                .add(ModBlocks.getRK(ModBlocks.TREE_FARM_MACHINE.get()));
     }
 }

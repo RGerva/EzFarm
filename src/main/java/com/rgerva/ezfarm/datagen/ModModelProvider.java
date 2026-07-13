@@ -46,6 +46,7 @@ public class ModModelProvider extends ModelProvider {
         blockModels.createTrivialCube(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
 
         blockModels.createFurnace(ModBlocks.EZ_ORE_MACHINE.get(), TexturedModel.ORIENTABLE);
+        blockModels.createFurnace(ModBlocks.TREE_FARM_MACHINE.get(), TexturedModel.ORIENTABLE);
 
         createCable(ModBlocks.COPPER_CABLE, blockModels);
     }

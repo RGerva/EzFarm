@@ -41,6 +41,7 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.DUMMY.get());
                         output.accept(ModBlocks.EZ_ORE_MACHINE.get());
+                        output.accept(ModBlocks.TREE_FARM_MACHINE.get());
                         output.accept(ModBlocks.CREATIVE_ENERGY_GENERATOR.get());
                         output.accept(ModBlocks.COPPER_CABLE.get());
                     }).build());
