@@ -14,7 +14,7 @@
   </component>
   <component name="McpModuleSettings">
     <option name="minecraftVersion" value="1.26.2" />
-    <option name="platformVersion" value="26.2.0.12-beta" />
+    <option name="platformVersion" value="26.2.0.25-beta" />
     <option name="srgType" value="TSRG" />
   </component>
 </module>
