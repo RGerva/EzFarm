@@ -66,7 +66,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
                 .save(output);
 
-        customTreeFarm(Items.OAK_SAPLING, Items.OAK_LOG, 4);
+        customTreeFarm(Items.OAK_SAPLING, Items.OAK_LOG, 6);
+        customTreeFarm(Items.ACACIA_SAPLING, Items.ACACIA_LOG, 2);
+        customTreeFarm(Items.SPRUCE_SAPLING, Items.SPRUCE_LOG, 2);
+        customTreeFarm(Items.BIRCH_SAPLING, Items.BIRCH_LOG, 2);
+        customTreeFarm(Items.CHERRY_SAPLING, Items.CHERRY_LOG, 2);
+        customTreeFarm(Items.DARK_OAK_SAPLING, Items.DARK_OAK_LOG, 4);
+        customTreeFarm(Items.JUNGLE_SAPLING, Items.JUNGLE_LOG, 4);
+        customTreeFarm(Items.PALE_OAK_SAPLING, Items.PALE_OAK_LOG, 4);
     }
 
     @Override
@@ -88,7 +95,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     protected void customTreeFarm(ItemLike input, ItemLike result, int count) {
-        TreeFarmRecipeBuilder.treeFarmRecipe(Ingredient.of(input), new ItemStackTemplate(result.asItem(), count))
+        TreeFarmRecipeBuilder.treeFarmRecipe(Ingredient.of(input), Ingredient.of(Items.DIRT), new ItemStackTemplate(result.asItem(), count))
                 .unlockedBy(getHasName(ModBlocks.TREE_FARM_MACHINE.get()), has(input))
                 .save(this.output, EzFarm.MOD_ID + ":" + getItemName(ModBlocks.TREE_FARM_MACHINE.get()) + "_duplicate_" + getItemName(input));
     }

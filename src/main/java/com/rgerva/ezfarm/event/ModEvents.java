@@ -19,6 +19,7 @@ import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.block.entity.cables.ModCableBlockEntity;
 import com.rgerva.ezfarm.block.entity.generators.ModGeneratorBlockEntity;
 import com.rgerva.ezfarm.block.entity.machines.ModMachinesBlockEntity;
+import com.rgerva.ezfarm.block.entity.machines.TreeFarmBlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -42,5 +43,7 @@ public class ModEvents {
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.CREATIVE_GENERATOR_BE.get(), ModGeneratorBlockEntity::getEnergyStorage);
 
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.COPPER_CABLE_BE.get(), ModCableBlockEntity::getEnergyStorage);
+
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.TREE_FARM_MACHINE_BE.get(), TreeFarmBlockEntity::getItemHandler);
     }
 }

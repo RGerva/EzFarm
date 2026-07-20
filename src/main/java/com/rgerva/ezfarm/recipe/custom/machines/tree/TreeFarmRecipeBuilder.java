@@ -30,15 +30,17 @@ public class TreeFarmRecipeBuilder implements RecipeBuilder {
     private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
     private final Ingredient ingredient;
+    private final Ingredient dirt;
     private final ItemStackTemplate result;
 
-    public TreeFarmRecipeBuilder(Ingredient ingredient, ItemStackTemplate result) {
+    public TreeFarmRecipeBuilder(Ingredient ingredient, Ingredient dirt, ItemStackTemplate result) {
         this.ingredient = ingredient;
+        this.dirt = dirt;
         this.result = result;
     }
 
-    public static TreeFarmRecipeBuilder treeFarmRecipe(Ingredient ingredient, ItemStackTemplate result) {
-        return new TreeFarmRecipeBuilder(ingredient, result);
+    public static TreeFarmRecipeBuilder treeFarmRecipe(Ingredient ingredient, Ingredient dirt, ItemStackTemplate result) {
+        return new TreeFarmRecipeBuilder(ingredient, dirt, result);
     }
 
     @Override
@@ -59,6 +61,6 @@ public class TreeFarmRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput, @NonNull ResourceKey<Recipe<?>> resourceKey) {
-        recipeOutput.accept(resourceKey, new TreeFarmRecipe(ingredient, result), advancement.build(resourceKey.identifier()));
+        recipeOutput.accept(resourceKey, new TreeFarmRecipe(ingredient, dirt, result), advancement.build(resourceKey.identifier()));
     }
 }

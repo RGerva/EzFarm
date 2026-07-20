@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jspecify.annotations.NonNull;
 
-public record TreeFarmRecipeInput(ItemStack input) implements RecipeInput {
+public record TreeFarmRecipeInput(ItemStack input, ItemStack dirt) implements RecipeInput {
     @Override
     public @NonNull ItemStack getItem(int i) {
         return input;

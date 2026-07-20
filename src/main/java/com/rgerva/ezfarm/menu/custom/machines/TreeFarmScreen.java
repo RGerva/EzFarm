@@ -49,5 +49,14 @@ public class TreeFarmScreen extends AbstractContainerScreen<TreeFarmMenu> {
         int y = (height - imageHeight) / 2;
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+
+        renderProgressArrow(graphics, x, y);
+    }
+
+    private void renderProgressArrow(GuiGraphicsExtractor guiGraphics, int x, int y) {
+        if (menu.isCrafting()) {
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE, x + 73, y + 35, 0, 0,
+                    menu.getScaledArrowProgress(), 16, 24, 16);
+        }
     }
 }

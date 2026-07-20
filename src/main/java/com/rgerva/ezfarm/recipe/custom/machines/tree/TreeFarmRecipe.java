@@ -25,11 +25,13 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 
-public record TreeFarmRecipe(Ingredient input, ItemStackTemplate output) implements Recipe<TreeFarmRecipeInput> {
+public record TreeFarmRecipe(Ingredient input, Ingredient dirt,
+                             ItemStackTemplate output) implements Recipe<TreeFarmRecipeInput> {
 
     public static final MapCodec<TreeFarmRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(TreeFarmRecipe::input),
+                    Ingredient.CODEC.fieldOf("dirt").forGetter(TreeFarmRecipe::dirt),
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(TreeFarmRecipe::output)
             ).apply(instance, TreeFarmRecipe::new));
 
@@ -37,6 +39,9 @@ public record TreeFarmRecipe(Ingredient input, ItemStackTemplate output) impleme
             StreamCodec.composite(
                     Ingredient.CONTENTS_STREAM_CODEC,
                     TreeFarmRecipe::input,
+
+                    Ingredient.CONTENTS_STREAM_CODEC,
+                    TreeFarmRecipe::dirt,
 
                     ItemStackTemplate.STREAM_CODEC,
                     TreeFarmRecipe::output,
