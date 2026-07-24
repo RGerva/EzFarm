@@ -45,5 +45,6 @@ public class ModEvents {
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.COPPER_CABLE_BE.get(), ModCableBlockEntity::getEnergyStorage);
 
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.TREE_FARM_MACHINE_BE.get(), TreeFarmBlockEntity::getItemHandler);
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.TREE_FARM_MACHINE_BE.get(), TreeFarmBlockEntity::getEnergyStorage);
     }
 }

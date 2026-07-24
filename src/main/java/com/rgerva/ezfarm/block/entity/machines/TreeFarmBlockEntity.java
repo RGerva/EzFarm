@@ -49,6 +49,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -57,11 +59,20 @@ import org.jspecify.annotations.Nullable;
 
 public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
 
-    public final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(3) {
+    public final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(4) {
         @Override
         protected void onContentsChanged(int index, @NonNull ItemStack previousContents) {
             super.onContentsChanged(index, previousContents);
             TreeFarmBlockEntity.this.setChanged();
+        }
+    };
+
+    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 248) {
+        @Override
+        protected void onEnergyChanged(int previousAmount) {
+            super.onEnergyChanged(previousAmount);
+            assert getLevel() != null;
+            getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
     };
 
@@ -72,8 +83,7 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     private static final int DIRT_SLOT = 0;
     private static final int INPUT_SLOT = 1;
     private static final int OUTPUT_SLOT = 2;
-
-    private static final int ENERGY_CRAFT_AMOUNT = 25;      // per tick
+    private static final int ENERGY_ITEM_SLOT = 3;
 
     public TreeFarmBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ModBlockEntities.TREE_FARM_MACHINE_BE.get(), worldPosition, blockState);
@@ -131,6 +141,8 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         output.putInt("tree_farmmax_progress", maxProgress);
 
         output.putChild("inventory", inventory);
+
+        ENERGY_STORAGE.serialize(output);
     }
 
     @Override
@@ -140,6 +152,8 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         maxProgress = input.getIntOr("tree_farmmax_progress", 1000);
 
         input.child("inventory").ifPresent(inventory::deserialize);
+
+        ENERGY_STORAGE.deserialize(input);
     }
 
     public void drops() {
@@ -159,8 +173,12 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (hasRecipe() && hasDirt()) {
-
-            increaseCraftingProgress(10);
+            if (hasEnoughEnergyToCraft()) {
+                increaseCraftingProgress(5);
+                useEnergyForCrafting();
+            } else {
+                increaseCraftingProgress(2);
+            }
 
             setChanged(level, pos, state);
             level.setBlockAndUpdate(pos, state.setValue(TreeFarmBlock.LIT, true));
@@ -194,7 +212,8 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     private Optional<RecipeHolder<TreeFarmRecipe>> getCurrentRecipe() {
         assert level != null;
         return ((ServerLevel) level).recipeAccess().getRecipeFor(ModRecipes.TREE_FARM_MACHINE_TYPE.get(),
-                new TreeFarmRecipeInput(inventory.getResource(INPUT_SLOT).toStack(), inventory.getResource(DIRT_SLOT).toStack()), level);
+                new TreeFarmRecipeInput(inventory.getResource(INPUT_SLOT).toStack(), inventory.getResource(DIRT_SLOT).toStack(),
+                        inventory.getAmountAsInt(ENERGY_ITEM_SLOT)), level);
     }
 
     private boolean hasDirt() {
@@ -210,7 +229,7 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         if (recipe.isEmpty()) return false;
 
         ItemStack output = recipe.get().value().assemble(new TreeFarmRecipeInput(inventory.getResource(INPUT_SLOT).toStack(),
-                inventory.getResource(DIRT_SLOT).toStack()));
+                inventory.getResource(DIRT_SLOT).toStack(), inventory.getAmountAsInt(ENERGY_ITEM_SLOT)));
 
         boolean outputSlotAmount = canInsertAmountIntoOutputSlot(output.getCount());
         boolean outputSlotItem = canInsertItemIntoOutputSlot(output);
@@ -240,5 +259,21 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
 
     private void resetProgress() {
         this.progress = 0;
+    }
+
+    public EnergyHandler getEnergyStorage(@Nullable Direction direction) {
+        return this.ENERGY_STORAGE;
+    }
+
+    private boolean hasEnoughEnergyToCraft() {
+        return this.ENERGY_STORAGE.getAmountAsInt() > 0;
+    }
+
+    private void useEnergyForCrafting() {
+        try (Transaction transaction = Transaction.openRoot()) {
+            Optional<RecipeHolder<TreeFarmRecipe>> recipe = getCurrentRecipe();
+            this.ENERGY_STORAGE.extract(recipe.get().value().min_energy(), transaction);
+            transaction.commit();
+        }
     }
 }

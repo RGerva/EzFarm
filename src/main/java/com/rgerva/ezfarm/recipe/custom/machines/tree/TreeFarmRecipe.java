@@ -14,10 +14,12 @@
 
 package com.rgerva.ezfarm.recipe.custom.machines.tree;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.rgerva.ezfarm.recipe.ModRecipes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -25,13 +27,14 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 
-public record TreeFarmRecipe(Ingredient input, Ingredient dirt,
+public record TreeFarmRecipe(Ingredient input, Ingredient dirt, int min_energy,
                              ItemStackTemplate output) implements Recipe<TreeFarmRecipeInput> {
 
     public static final MapCodec<TreeFarmRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(TreeFarmRecipe::input),
                     Ingredient.CODEC.fieldOf("dirt").forGetter(TreeFarmRecipe::dirt),
+                    Codec.INT.fieldOf("min_energy").forGetter(TreeFarmRecipe::min_energy),
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(TreeFarmRecipe::output)
             ).apply(instance, TreeFarmRecipe::new));
 
@@ -42,6 +45,9 @@ public record TreeFarmRecipe(Ingredient input, Ingredient dirt,
 
                     Ingredient.CONTENTS_STREAM_CODEC,
                     TreeFarmRecipe::dirt,
+
+                    ByteBufCodecs.INT,
+                    TreeFarmRecipe::min_energy,
 
                     ItemStackTemplate.STREAM_CODEC,
                     TreeFarmRecipe::output,

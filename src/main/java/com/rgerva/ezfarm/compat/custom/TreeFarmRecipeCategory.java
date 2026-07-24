@@ -17,7 +17,10 @@ package com.rgerva.ezfarm.compat.custom;
 import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.compat.ModJEIRecipeTypes;
+import com.rgerva.ezfarm.menu.custom.machines.TreeFarmScreen;
 import com.rgerva.ezfarm.recipe.custom.machines.tree.TreeFarmRecipe;
+
+import java.util.List;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -95,10 +98,16 @@ public class TreeFarmRecipeCategory implements IRecipeCategory<RecipeHolder<Tree
     public void draw(@NonNull RecipeHolder<TreeFarmRecipe> recipe, @NonNull IRecipeSlotsView recipeSlotsView, @NonNull GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         this.overlay.draw(guiGraphics, 0, 0);
 
-//        guiGraphics.fillGradient(152, 40, 168, 57, 0xffb51500, 0xff600b00);
-//        if (ModMachineScreen.isMouseAboveArea((int) mouseX, (int) mouseY, 0, 0, 152, 7, 16, 51)) {
-//            guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, List.of(Component.literal(25 + "FE/T Needed. Total of 1800 FE.")),
-//                    (int) mouseX, (int) mouseY + 110);
-//        }
+        int maxMachineEnergy = 64000;
+        int minEnergy = recipe.value().min_energy();
+        double energyPercent = Math.min(1.0, (double) minEnergy / maxMachineEnergy) * 100;
+        int correctYStart = 77 - (int) (energyPercent * 37);
+
+        guiGraphics.fillGradient(152, correctYStart - 10, 168, 77, 0xffb51500, 0xff600b00);
+
+        if (TreeFarmScreen.isMouseAboveArea((int) mouseX, (int) mouseY, 0, 0, 152, 7, 16, 72)) {
+            guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, List.of(Component.literal(minEnergy + " FE/T Needed.")),
+                    (int) mouseX, (int) mouseY + 110);
+        }
     }
 }

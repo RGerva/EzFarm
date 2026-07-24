@@ -31,16 +31,18 @@ public class TreeFarmRecipeBuilder implements RecipeBuilder {
 
     private final Ingredient ingredient;
     private final Ingredient dirt;
+    private final int min_energy;
     private final ItemStackTemplate result;
 
-    public TreeFarmRecipeBuilder(Ingredient ingredient, Ingredient dirt, ItemStackTemplate result) {
+    public TreeFarmRecipeBuilder(Ingredient ingredient, Ingredient dirt, int min_energy, ItemStackTemplate result) {
         this.ingredient = ingredient;
         this.dirt = dirt;
+        this.min_energy = min_energy;
         this.result = result;
     }
 
-    public static TreeFarmRecipeBuilder treeFarmRecipe(Ingredient ingredient, Ingredient dirt, ItemStackTemplate result) {
-        return new TreeFarmRecipeBuilder(ingredient, dirt, result);
+    public static TreeFarmRecipeBuilder treeFarmRecipe(Ingredient ingredient, Ingredient dirt, int min_energy, ItemStackTemplate result) {
+        return new TreeFarmRecipeBuilder(ingredient, dirt, min_energy, result);
     }
 
     @Override
@@ -61,6 +63,6 @@ public class TreeFarmRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput, @NonNull ResourceKey<Recipe<?>> resourceKey) {
-        recipeOutput.accept(resourceKey, new TreeFarmRecipe(ingredient, dirt, result), advancement.build(resourceKey.identifier()));
+        recipeOutput.accept(resourceKey, new TreeFarmRecipe(ingredient, dirt, min_energy, result), advancement.build(resourceKey.identifier()));
     }
 }

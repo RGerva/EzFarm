@@ -15,6 +15,8 @@
 package com.rgerva.ezfarm.menu.custom.machines;
 
 import com.rgerva.ezfarm.EzFarm;
+import com.rgerva.ezfarm.menu.custom.renderer.EnergyDisplayTooltipArea;
+import com.rgerva.ezfarm.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -28,6 +30,7 @@ public class TreeFarmScreen extends AbstractContainerScreen<TreeFarmMenu> {
             Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, "textures/gui/machines/tree_farm_machine_gui.png");
     private static final Identifier ARROW_TEXTURE =
             Identifier.fromNamespaceAndPath(EzFarm.MOD_ID, "textures/gui/machines/arrow_progress.png");
+    private EnergyDisplayTooltipArea energyInfoArea;
 
     public TreeFarmScreen(TreeFarmMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -39,6 +42,29 @@ public class TreeFarmScreen extends AbstractContainerScreen<TreeFarmMenu> {
 
         this.inventoryLabelX = 65;
         this.titleLabelX = 65;
+
+        assignEnergyInfoArea();
+    }
+
+    private void assignEnergyInfoArea() {
+        energyInfoArea = new EnergyDisplayTooltipArea(((width - imageWidth) / 2) + 152,
+                ((height - imageHeight) / 2) + 7, menu.blockEntity.getEnergyStorage(null), 16, 72);
+    }
+
+    private void renderEnergyAreaTooltip(GuiGraphicsExtractor guiGraphics, int pMouseX, int pMouseY, int x, int y) {
+        if (isMouseAboveArea(pMouseX, pMouseY, x, y, 152, 7, 16, 72)) {
+            guiGraphics.setComponentTooltipForNextFrame(this.font, energyInfoArea.getTooltips(), pMouseX, pMouseY);
+        }
+    }
+
+    @Override
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+        super.extractLabels(graphics, xm, ym);
+
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
+        renderEnergyAreaTooltip(graphics, xm, ym, x, y);
     }
 
     @Override
@@ -50,6 +76,8 @@ public class TreeFarmScreen extends AbstractContainerScreen<TreeFarmMenu> {
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
+        energyInfoArea.render(graphics);
+
         renderProgressArrow(graphics, x, y);
     }
 
@@ -58,5 +86,9 @@ public class TreeFarmScreen extends AbstractContainerScreen<TreeFarmMenu> {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE, x + 73, y + 35, 0, 0,
                     menu.getScaledArrowProgress(), 16, 24, 16);
         }
+    }
+
+    public static boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int offsetX, int offsetY, int width, int height) {
+        return ModUtils.isMouseOver(pMouseX, pMouseY, x + offsetX, y + offsetY, width, height);
     }
 }
