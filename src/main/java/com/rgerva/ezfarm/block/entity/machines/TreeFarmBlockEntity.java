@@ -57,7 +57,7 @@ import org.jspecify.annotations.Nullable;
 
 public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
 
-    public final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5) {
+    public final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(3) {
         @Override
         protected void onContentsChanged(int index, @NonNull ItemStack previousContents) {
             super.onContentsChanged(index, previousContents);
@@ -69,9 +69,9 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     private int progress = 0;
     private int maxProgress = 1000;
 
+    private static final int DIRT_SLOT = 0;
     private static final int INPUT_SLOT = 1;
-    private static final int DIRT_SLOT = 2;
-    private static final int OUTPUT_SLOT = 3;
+    private static final int OUTPUT_SLOT = 2;
 
     private static final int ENERGY_CRAFT_AMOUNT = 25;      // per tick
 

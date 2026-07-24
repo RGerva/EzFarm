@@ -17,7 +17,6 @@ package com.rgerva.ezfarm.menu.custom.machines;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.block.entity.machines.TreeFarmBlockEntity;
 import com.rgerva.ezfarm.menu.ModMenuTypes;
-import com.rgerva.ezfarm.tag.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
@@ -40,7 +38,7 @@ public class TreeFarmMenu extends AbstractContainerMenu {
 
     public TreeFarmMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
         this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()),
-                new ItemStacksResourceHandler(5), new SimpleContainerData(3));
+                new ItemStacksResourceHandler(3), new SimpleContainerData(3));
     }
 
     public TreeFarmMenu(int pContainerId, Inventory inv, BlockEntity entity, ItemStacksResourceHandler handler, ContainerData data) {
@@ -53,10 +51,13 @@ public class TreeFarmMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 0, 8, 62) {
+        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 0, 54, 46) {
             @Override
             public boolean mayPlace(@NonNull ItemStack stack) {
-                return stack.is(Items.WATER_BUCKET);
+                if (!(stack.getItem() instanceof BlockItem blockItem)) {
+                    return false;
+                }
+                return blockItem.getBlock().defaultBlockState().is(BlockTags.DIRT);
             }
         });
 
@@ -67,26 +68,10 @@ public class TreeFarmMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 2, 54, 46) {
-            @Override
-            public boolean mayPlace(@NonNull ItemStack stack) {
-                if (!(stack.getItem() instanceof BlockItem blockItem)) {
-                    return false;
-                }
-                return blockItem.getBlock().defaultBlockState().is(BlockTags.DIRT);
-            }
-        });
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 3, 104, 34) {
+        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 2, 104, 34) {
             @Override
             public boolean mayPlace(@NonNull ItemStack itemStack) {
                 return false;
-            }
-        });
-
-        this.addSlot(new ResourceHandlerSlot(handler, handler::set, 4, 152, 62) {
-            @Override
-            public boolean mayPlace(@NonNull ItemStack stack) {
-                return stack.is(ModTags.Items.EZFARM_ITEM_ENERGY);
             }
         });
 
@@ -112,7 +97,7 @@ public class TreeFarmMenu extends AbstractContainerMenu {
     private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-    private static final int TE_INVENTORY_SLOT_COUNT = 5;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
 
     @Override
     public @NonNull ItemStack quickMoveStack(@NonNull Player player, int pIndex) {
