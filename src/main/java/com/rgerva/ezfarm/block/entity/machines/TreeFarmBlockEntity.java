@@ -14,8 +14,8 @@
 
 package com.rgerva.ezfarm.block.entity.machines;
 
-import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
+import com.rgerva.ezfarm.block.custom.machines.TreeFarmBlock;
 import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.menu.custom.machines.TreeFarmMenu;
 import com.rgerva.ezfarm.recipe.ModRecipes;
@@ -32,6 +32,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -39,6 +41,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -46,6 +49,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -63,6 +67,29 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         protected void onContentsChanged(int index, @NonNull ItemStack previousContents) {
             super.onContentsChanged(index, previousContents);
             TreeFarmBlockEntity.this.setChanged();
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            ItemStack stack = resource.toStack();
+            return switch (index) {
+                case DIRT_SLOT -> stack.getItem() instanceof BlockItem blockItem
+                        && blockItem.getBlock()
+                        .defaultBlockState()
+                        .is(BlockTags.DIRT);
+
+                case INPUT_SLOT -> stack.is(ItemTags.SAPLINGS);
+                case OUTPUT_SLOT -> false;
+                default -> super.isValid(index, resource);
+            };
+        }
+
+        @Override
+        protected int getCapacity(int index, ItemResource resource) {
+            return switch (index) {
+                case DIRT_SLOT, INPUT_SLOT -> 1;
+                default -> super.getCapacity(index, resource);
+            };
         }
     };
 
@@ -88,6 +115,9 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     private static final int INPUT_SLOT = 1;
     private static final int OUTPUT_SLOT = 2;
     private static final int ENERGY_ITEM_SLOT = 3;
+
+    private final ResourceHandler<ItemResource> inputHandler = RangedResourceHandler.of(inventory, DIRT_SLOT, INPUT_SLOT + 1);
+    private final ResourceHandler<ItemResource> outputHandler = RangedResourceHandler.ofSingleIndex(inventory, OUTPUT_SLOT);
 
     public TreeFarmBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ModBlockEntities.TREE_FARM_MACHINE_BE.get(), worldPosition, blockState);
@@ -170,9 +200,14 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         Containers.dropContents(this.level, this.worldPosition, inv);
     }
 
-    public ResourceHandler<ItemResource> getItemHandler(Direction direction) {
-        if (direction == null) return inventory;
-        return null;
+    public ResourceHandler<ItemResource> getItemHandler(@Nullable Direction direction) {
+        if (direction == null) {
+            return inventory;
+        }
+        if (direction == Direction.DOWN) {
+            return outputHandler;
+        }
+        return inputHandler;
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -183,7 +218,7 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
             }
 
             setChanged(level, pos, state);
-            level.setBlockAndUpdate(pos, state.setValue(ModMachinesBlock.LIT, true));
+            level.setBlockAndUpdate(pos, state.setValue(TreeFarmBlock.LIT, true));
 
             if (hasCraftingFinished()) {
                 craftItem();
@@ -191,10 +226,8 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
             }
         } else {
             resetProgress();
-            level.setBlockAndUpdate(pos, state.setValue(ModMachinesBlock.LIT, false));
+            level.setBlockAndUpdate(pos, state.setValue(TreeFarmBlock.LIT, false));
         }
-
-        EzFarm.LOGGER.debug("ENERGY DELTA: {}%", (this.ENERGY_STORAGE.getAmountAsInt() * 100.0) / this.ENERGY_STORAGE.getCapacityAsInt());
     }
 
     private void craftItem() {
