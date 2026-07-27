@@ -33,6 +33,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.NonNull;
@@ -40,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 
 public class ModCableBlockEntity extends BlockEntity {
     private final int MAX_TRANSFER = 512;
+    private static final int CABLE_BUFFER_FILL_RATE = 16;
     private boolean loaded;
 
     private final Map<Pair<BlockPos, Direction>, EnergyHandler> producers = new HashMap<>();
@@ -172,8 +174,10 @@ public class ModCableBlockEntity extends BlockEntity {
             }
         }
 
-        if (consumptionSum <= 0)
+        if (consumptionSum <= 0) {
+            fillCableNetwork(level, blockPos, energyProduction, CABLE_BUFFER_FILL_RATE);
             return;
+        }
 
         int transferLeft = Math.min(Math.min(MAX_TRANSFER, productionSum), consumptionSum);
 
@@ -255,13 +259,77 @@ public class ModCableBlockEntity extends BlockEntity {
                     transaction.commit();
                 }
         }
+
+        int remainingTransferCapacity = MAX_TRANSFER - transferLeft;
+        int cableBufferBudget = Math.min(CABLE_BUFFER_FILL_RATE, remainingTransferCapacity);
+
+        if (cableBufferBudget > 0) {
+            fillCableNetwork(level, blockPos, energyProduction, cableBufferBudget);
+        }
     }
 
-    private void fillUpOnEnergy() {
-        try (Transaction transaction = Transaction.openRoot()) {
-            this.ENERGY_STORAGE.insert(160, transaction);
-            transaction.commit();
+    private static List<ModCableBlockEntity> getConnectedCables(Level level, BlockPos startPos) {
+        List<ModCableBlockEntity> connectedCables = new ArrayList<>();
+        Set<BlockPos> checkedPositions = new HashSet<>();
+        Deque<BlockPos> positionsToCheck = new ArrayDeque<>();
+
+        checkedPositions.add(startPos);
+        positionsToCheck.add(startPos);
+
+        while (!positionsToCheck.isEmpty()) {
+            BlockPos currentPos = positionsToCheck.removeFirst();
+
+            BlockEntity blockEntity = level.getBlockEntity(currentPos);
+            if (!(blockEntity instanceof ModCableBlockEntity cableBlockEntity)) {
+                continue;
+            }
+
+            connectedCables.add(cableBlockEntity);
+
+            for (Direction direction : Direction.values()) {
+                BlockPos neighbourPos = currentPos.relative(direction);
+
+                if (checkedPositions.contains(neighbourPos)) {
+                    continue;
+                }
+
+                if (level.getBlockEntity(neighbourPos) instanceof ModCableBlockEntity) {
+                    checkedPositions.add(neighbourPos);
+                    positionsToCheck.addLast(neighbourPos);
+                }
+            }
         }
+        return connectedCables;
+    }
+
+    private static void fillCableNetwork(Level level, BlockPos sourceCablePos, List<EnergyHandler> producers, int maxAmount) {
+
+        if (maxAmount <= 0 || producers.isEmpty()) {
+            return;
+        }
+
+        List<ModCableBlockEntity> connectedCables = getConnectedCables(level, sourceCablePos);
+        Collections.reverse(connectedCables);
+
+        int totalMoved = 0;
+
+        for (ModCableBlockEntity cable : connectedCables) {
+            if (totalMoved >= maxAmount) {
+                break;
+            }
+
+            for (EnergyHandler producer : producers) {
+                int remaining = maxAmount - totalMoved;
+
+                if (remaining <= 0) {
+                    break;
+                }
+
+                int moved = EnergyHandlerUtil.move(producer, cable.ENERGY_STORAGE, remaining, null);
+                totalMoved += moved;
+            }
+        }
+
     }
 
     public EnergyHandler getEnergyStorage(@Nullable Direction direction) {

@@ -14,7 +14,6 @@
 
 package com.rgerva.ezfarm.block.entity.machines;
 
-import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
 import com.rgerva.ezfarm.block.custom.machines.TreeFarmBlock;
 import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.menu.custom.machines.TreeFarmMenu;
