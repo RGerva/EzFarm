@@ -39,14 +39,14 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class ModCableBlockEntity extends BlockEntity {
-    private final int MAX_TRANSFER = 128;
+    private final int MAX_TRANSFER = 512;
     private boolean loaded;
 
     private final Map<Pair<BlockPos, Direction>, EnergyHandler> producers = new HashMap<>();
     private final Map<Pair<BlockPos, Direction>, EnergyHandler> consumers = new HashMap<>();
     private final Deque<BlockPos> cableBlocks = new ArrayDeque<>();
 
-    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(128, MAX_TRANSFER) {
+    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(256, MAX_TRANSFER) {
         @Override
         protected void onEnergyChanged(int previousAmount) {
             super.onEnergyChanged(previousAmount);

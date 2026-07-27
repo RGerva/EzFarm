@@ -14,6 +14,7 @@
 
 package com.rgerva.ezfarm.menu.custom.machines;
 
+import com.rgerva.ezfarm.EzFarm;
 import com.rgerva.ezfarm.block.ModBlocks;
 import com.rgerva.ezfarm.block.entity.machines.TreeFarmBlockEntity;
 import com.rgerva.ezfarm.menu.ModMenuTypes;
@@ -59,12 +60,22 @@ public class TreeFarmMenu extends AbstractContainerMenu {
                 }
                 return blockItem.getBlock().defaultBlockState().is(BlockTags.DIRT);
             }
+
+            @Override
+            public int getMaxStackSize(@NonNull ItemStack stack) {
+                return Math.min(super.getMaxStackSize(stack), 1);
+            }
         });
 
         this.addSlot(new ResourceHandlerSlot(handler, handler::set, 1, 54, 23) {
             @Override
             public boolean mayPlace(@NonNull ItemStack stack) {
                 return stack.is(ItemTags.SAPLINGS);
+            }
+
+            @Override
+            public int getMaxStackSize(@NonNull ItemStack stack) {
+                return Math.min(super.getMaxStackSize(stack), 1);
             }
         });
 
@@ -121,7 +132,7 @@ public class TreeFarmMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else {
-            System.out.println("Invalid slotIndex:" + pIndex);
+            EzFarm.LOGGER.info("Invalid slotIndex: {}", pIndex);
             return ItemStack.EMPTY;
         }
         // If stack size == 0 (the entire stack was moved) set slot contents to null

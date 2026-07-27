@@ -15,8 +15,7 @@
 package com.rgerva.ezfarm.block.entity.machines;
 
 import com.rgerva.ezfarm.EzFarm;
-import com.rgerva.ezfarm.block.ModBlocks;
-import com.rgerva.ezfarm.block.custom.machines.TreeFarmBlock;
+import com.rgerva.ezfarm.block.custom.machines.ModMachinesBlock;
 import com.rgerva.ezfarm.block.entity.ModBlockEntities;
 import com.rgerva.ezfarm.menu.custom.machines.TreeFarmMenu;
 import com.rgerva.ezfarm.recipe.ModRecipes;
@@ -67,12 +66,17 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         }
     };
 
-    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 248) {
+    private final SimpleEnergyHandler ENERGY_STORAGE = new SimpleEnergyHandler(64000, 256) {
         @Override
         protected void onEnergyChanged(int previousAmount) {
             super.onEnergyChanged(previousAmount);
-            assert getLevel() != null;
-            getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            TreeFarmBlockEntity.this.setChanged();
+
+            Level currentLevel = getLevel();
+
+            if (currentLevel != null) {
+                currentLevel.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            }
         }
     };
 
@@ -174,14 +178,12 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (hasRecipe() && hasDirt()) {
             if (hasEnoughEnergyToCraft()) {
+                useEnergyToCraft();
                 increaseCraftingProgress(5);
-                useEnergyForCrafting();
-            } else {
-                increaseCraftingProgress(2);
             }
 
             setChanged(level, pos, state);
-            level.setBlockAndUpdate(pos, state.setValue(TreeFarmBlock.LIT, true));
+            level.setBlockAndUpdate(pos, state.setValue(ModMachinesBlock.LIT, true));
 
             if (hasCraftingFinished()) {
                 craftItem();
@@ -189,20 +191,18 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
             }
         } else {
             resetProgress();
-            level.setBlockAndUpdate(pos, state.setValue(TreeFarmBlock.LIT, false));
+            level.setBlockAndUpdate(pos, state.setValue(ModMachinesBlock.LIT, false));
         }
+
+        EzFarm.LOGGER.debug("ENERGY DELTA: {}%", (this.ENERGY_STORAGE.getAmountAsInt() * 100.0) / this.ENERGY_STORAGE.getCapacityAsInt());
     }
 
     private void craftItem() {
         Optional<RecipeHolder<TreeFarmRecipe>> recipe = getCurrentRecipe();
         ItemStack output = recipe.get().value().output().create();
 
-        EzFarm.LOGGER.info("Crafting Item: {}: {}", ModBlocks.TREE_FARM_MACHINE.get(), recipe.get().value());
-
         try (Transaction transaction = Transaction.openRoot()) {
             ItemAccess itemAccess = ItemAccess.forHandlerIndex(inventory, OUTPUT_SLOT);
-
-            inventory.extract(inventory.getResource(INPUT_SLOT), 1, transaction);
             inventory.set(OUTPUT_SLOT, ItemResource.of(output), itemAccess.getAmount() + output.getCount());
 
             transaction.commit();
@@ -218,10 +218,11 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
 
     private boolean hasDirt() {
         Optional<RecipeHolder<TreeFarmRecipe>> recipe = getCurrentRecipe();
-        if (recipe.isEmpty() || inventory.getResource(DIRT_SLOT).isEmpty()) return false;
+        if (recipe.isEmpty()) return false;
 
-        return inventory.getResource(DIRT_SLOT).isEmpty() ||
-                inventory.getResource(DIRT_SLOT).is(recipe.get().value().dirt().getValues());
+        ItemResource dirtResource = inventory.getResource(DIRT_SLOT);
+
+        return !dirtResource.isEmpty() && dirtResource.is(recipe.get().value().dirt().getValues());
     }
 
     private boolean hasRecipe() {
@@ -258,7 +259,7 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void resetProgress() {
-        this.progress = 0;
+        progress = 0;
     }
 
     public EnergyHandler getEnergyStorage(@Nullable Direction direction) {
@@ -269,10 +270,16 @@ public class TreeFarmBlockEntity extends BlockEntity implements MenuProvider {
         return this.ENERGY_STORAGE.getAmountAsInt() > 0;
     }
 
-    private void useEnergyForCrafting() {
+    private int energyRecipePerTick() {
+        Optional<RecipeHolder<TreeFarmRecipe>> recipe = getCurrentRecipe();
+        int recipeEnergy = recipe.get().value().min_energy();
+        int energyProgress = (maxProgress / 20);
+        return recipeEnergy / energyProgress;
+    }
+
+    private void useEnergyToCraft() {
         try (Transaction transaction = Transaction.openRoot()) {
-            Optional<RecipeHolder<TreeFarmRecipe>> recipe = getCurrentRecipe();
-            this.ENERGY_STORAGE.extract(recipe.get().value().min_energy(), transaction);
+            this.ENERGY_STORAGE.extract(energyRecipePerTick() * 25, transaction);
             transaction.commit();
         }
     }

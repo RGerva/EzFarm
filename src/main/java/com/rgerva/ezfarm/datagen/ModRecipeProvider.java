@@ -66,14 +66,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
                 .save(output);
 
-        customTreeFarm(Items.OAK_SAPLING, Items.OAK_LOG, 4, 496);
-        customTreeFarm(Items.ACACIA_SAPLING, Items.ACACIA_LOG, 2, 256);
-        customTreeFarm(Items.SPRUCE_SAPLING, Items.SPRUCE_LOG, 2, 256);
-        customTreeFarm(Items.BIRCH_SAPLING, Items.BIRCH_LOG, 2, 256);
-        customTreeFarm(Items.CHERRY_SAPLING, Items.CHERRY_LOG, 2, 256);
-        customTreeFarm(Items.DARK_OAK_SAPLING, Items.DARK_OAK_LOG, 4, 496);
-        customTreeFarm(Items.JUNGLE_SAPLING, Items.JUNGLE_LOG, 4, 496);
-        customTreeFarm(Items.PALE_OAK_SAPLING, Items.PALE_OAK_LOG, 4, 496);
+        customTreeFarm(Items.OAK_SAPLING, Items.OAK_LOG, 4, 256);
+        customTreeFarm(Items.ACACIA_SAPLING, Items.ACACIA_LOG, 2, 64);
+        customTreeFarm(Items.SPRUCE_SAPLING, Items.SPRUCE_LOG, 4, 256);
+        customTreeFarm(Items.BIRCH_SAPLING, Items.BIRCH_LOG, 2, 64);
+        customTreeFarm(Items.CHERRY_SAPLING, Items.CHERRY_LOG, 2, 64);
+        customTreeFarm(Items.DARK_OAK_SAPLING, Items.DARK_OAK_LOG, 4, 256);
+        customTreeFarm(Items.JUNGLE_SAPLING, Items.JUNGLE_LOG, 4, 256);
+        customTreeFarm(Items.PALE_OAK_SAPLING, Items.PALE_OAK_LOG, 4, 256);
     }
 
     @Override
